@@ -1,5 +1,5 @@
-ALIGN 4
-#include "RepointTable/RepointText.event"
+//ALIGN 4
+//#include "RepointTable/RepointText.event"
 
 ALIGN 4
 #include "Tools/Tool Helpers.txt"
