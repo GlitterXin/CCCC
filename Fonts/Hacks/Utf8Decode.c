@@ -6,6 +6,9 @@
 #define CHAR_NEWLINE 0x01
 extern struct Font * gActiveFont;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
+
 static int GetChLenUtf8(const char * str)
 {
     const u8 * utf8_in = (const u8 *)str;
@@ -20,7 +23,7 @@ static int GetChLenUtf8(const char * str)
     if ((0b11100000 & cod) == 0b11000000)
         return 2;
 
-    if ((0b10000000 & cod) == 0x0)
+    if ((0b10000000 & cod) == 0x0 || (cod >= 0x80 && cod <= 0xFF))
         return 1;
 
 #ifdef LogPrintf
@@ -29,6 +32,8 @@ static int GetChLenUtf8(const char * str)
 
     return -1;
 }
+
+#pragma GCC diagnostic pop
 
 static int DecodeUtf8(const char * str, u32 * unicode_out, int * len)
 {
@@ -70,7 +75,6 @@ static int DecodeUtf8(const char * str, u32 * unicode_out, int * len)
         return 0;
 
     default:
-
 #ifdef LogPrintf
         LogPrintf("%s: Failed on decoding at %#X!", __func__, str);
 #endif
@@ -86,7 +90,15 @@ static struct Glyph * GetCharGlyphUnicode(u32 unicode_ch, struct Font * font)
     int hi = (unicode_ch >> 0x8) & 0xFF;
     int lo = unicode_ch & 0xFF;
 
-    /* For now, we can only support for group 1 of unicode (U_0000 ~ U_FFFF) */
+    if (unicode_ch >= 0x80 && unicode_ch <= 0xFF)
+    {
+        for (glyph = font->glyphs[lo]; glyph != NULL; glyph = glyph->sjisNext)
+        {
+            if (glyph->sjisByte1 == 0)
+                return glyph;
+        }
+    }
+
     if (unicode_ch >= 0x10000)
     {
 #ifdef LogPrintf
@@ -95,7 +107,7 @@ static struct Glyph * GetCharGlyphUnicode(u32 unicode_ch, struct Font * font)
         return NULL;
     }
 
-    for(glyph = font->glyphs[lo]; glyph != NULL; glyph = glyph->sjisNext)
+    for (glyph = font->glyphs[lo]; glyph != NULL; glyph = glyph->sjisNext)
     {
         if (glyph->sjisByte1 == hi)
             return glyph;
@@ -107,7 +119,6 @@ static struct Glyph * GetCharGlyphUnicode(u32 unicode_ch, struct Font * font)
     return NULL;
 }
 
-/* LynJump! */
 const char * GetCharTextLen(const char * str, u32 * width)
 {
     struct Glyph * glyph;
@@ -126,7 +137,6 @@ const char * GetCharTextLen(const char * str, u32 * width)
     return str + decode_len;
 }
 
-/* LynJump! */
 int GetStringTextLen(const char * str)
 {
     u32 _wid;
@@ -139,7 +149,6 @@ int GetStringTextLen(const char * str)
     return width;
 }
 
-/* LynJump! */
 const char * Text_DrawCharacter(struct Text * text, const char * str)
 {
     struct Glyph * glyph;
@@ -161,7 +170,6 @@ const char * Text_DrawCharacter(struct Text * text, const char * str)
     return str + decode_len;
 }
 
-/* LynJump! */
 void Text_DrawString(struct Text * text, const char * str)
 {
     while (*str != 0 && *str != CHAR_NEWLINE)
