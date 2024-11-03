@@ -2,7 +2,7 @@
 //#include "RepointTable/RepointText.event"
 
 ALIGN 4
-#include "Tool Helpers.txt"
+#include "ToolHelpers.txt"
 #include "Extensions/Hack Installation.txt"
 {
 // Anti-Huffman Patch, by Hextator and Nintenlord
