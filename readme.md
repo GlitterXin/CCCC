@@ -4,7 +4,7 @@ It's a Chinese translation patch for Cerulean Crescent(FE8U Hack)
 
 Please refer to the original ```readme.md``` for custom build, but in the fourth step, please put ```Cerulean Crescent.gba```rom named ```fe8.gba``` in the repository directory
 
-# --------------------- Here is the original readme.md ---------------------
+# --- Here is the original readme.md ---
 
 # UTF8InstallerFE8U
 
