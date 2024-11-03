@@ -1,0 +1,9 @@
+#ifdef _FE8_
+#ifndef TextTable
+    #define TextTable 0x1C8C2F4
+#endif
+#endif
+
+
+//For use with ParseFile
+#define setText(textID, offset) "PUSH; ORG (TextTable+4*textID); POIN (offset | 0x80000000); POP" //Anti-huffman
