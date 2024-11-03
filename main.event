@@ -1,6 +1,6 @@
 
 #ifndef FreeSpace
-    #define FreeSpace 0xB2A604
+    #define FreeSpace 0xBA0000
     ORG FreeSpace
 #endif
 
@@ -9,7 +9,6 @@
 
 
 #ifndef FreeFontSpace
-    // There is no enough space at B2A604
     #define FreeFontSpace 0xEFB2E0
     #define FreeFontSpaceSize 0xE4D20
 
